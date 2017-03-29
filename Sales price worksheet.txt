@@ -1,0 +1,348 @@
+OBJECT Page 7023 Sales Price Worksheet
+{
+  OBJECT-PROPERTIES
+  {
+    Date=13.04.16;
+    Time=[ 0:23:03];
+    Modified=Yes;
+    Version List=NAVW18.00,NAVAE7.10,LSW17.0,AUTO8.00,AM1.0;
+  }
+  PROPERTIES
+  {
+    CaptionML=ENU=Sales Price Worksheet;
+    SaveValues=Yes;
+    SourceTable=Table7023;
+    DelayedInsert=Yes;
+    PageType=Worksheet;
+    OnOpenPage=VAR
+                 JnlSelected@50504 : Boolean;
+               BEGIN
+                 // <BGMILOVNAV-13>
+                 IF IsOpenedFromBatch THEN BEGIN
+                   CurrentJnlBatchName := "Journal Batch Name";
+                   ItemJnlMgt.OpenJnlSalesPrice(CurrentJnlTemplateName,CurrentJnlBatchName,Rec);
+                   EXIT;
+                 END;
+                 ItemJnlMgt.TemplateSelectionSalesPrice(PAGE::"Sales Price Worksheet",12,Rec,JnlSelected);
+                 IF NOT JnlSelected THEN
+                   ERROR('');
+                 ItemJnlMgt.OpenJnlSalesPrice(CurrentJnlTemplateName,CurrentJnlBatchName,Rec);
+                 // </BGMILOVNAV-13>
+               END;
+
+    OnNewRecord=BEGIN
+                  // <BGMILOVNAV-13>
+                  "Journal Template Name" := CurrentJnlTemplateName;
+                  "Journal Batch Name" := CurrentJnlBatchName;
+                  // </BGMILOVNAV-13>
+                END;
+
+    ActionList=ACTIONS
+    {
+      { 1900000004;0 ;ActionContainer;
+                      ActionContainerType=ActionItems }
+      { 50000   ;1   ;Action    ;
+                      Name=CountLines;
+                      CaptionML=[ENU=Count Lines;
+                                 SRL=Prebroj redove];
+                      Description=AUTO8.00;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=AddWatch;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 TextCountMsg@50000 : TextConst 'ENU=Lines Count: %1;SRL=Broj redova: %1';
+                               BEGIN
+                                 // <AUTO8.00>
+                                 MESSAGE(TextCountMsg,COUNT);
+                                 // </AUTO8.00>
+                               END;
+                                }
+      { 31      ;1   ;ActionGroup;
+                      CaptionML=ENU=F&unctions;
+                      Image=Action }
+      { 50005   ;2   ;Action    ;
+                      Name=ImportLinesFromExcel;
+                      Ellipsis=Yes;
+                      CaptionML=[ENU=Import Lines from Excel;
+                                 SRL=Uvoz redova iz Excela];
+                      Description=AUTO8.00;
+                      Promoted=Yes;
+                      PromotedIsBig=Yes;
+                      Image=ImportExcel;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ImportSPWorksfromExcel@1000000000 : Report 50017;
+                               BEGIN
+                                 // <AUTO8.00>
+                                 ImportSPWorksfromExcel.SetWSFilter("Journal Template Name","Journal Batch Name");
+                                 ImportSPWorksfromExcel.RUNMODAL;
+                                 // </AUTO8.00>
+                               END;
+                                }
+      { 50004   ;2   ;Separator  }
+      { 32      ;2   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=ENU=Suggest &Item Price on Wksh.;
+                      Promoted=Yes;
+                      Image=SuggestItemPrice;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SuggestItemPriceonWksh@1000000000 : Report 7051;
+                               BEGIN
+                                 // <BGMILOVNAV-13>
+                                 SuggestItemPriceonWksh.SetWSFilter("Journal Template Name","Journal Batch Name");
+                                 SuggestItemPriceonWksh.RUNMODAL;
+                                 {
+                                 REPORT.RUNMODAL(REPORT::"Suggest Item Price on Wksh.",TRUE,TRUE);
+                                 }
+                                 // </BGMILOVNAV-13>
+                               END;
+                                }
+      { 33      ;2   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=ENU=Suggest &Sales Price on Wksh.;
+                      Promoted=Yes;
+                      Image=SuggestSalesPrice;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SuggestSalesPriceonWksh@1000000000 : Report 7052;
+                               BEGIN
+                                 // <BGMILOVNAV-13>
+                                 SuggestSalesPriceonWksh.SetWSFilter("Journal Template Name","Journal Batch Name");
+                                 SuggestSalesPriceonWksh.RUNMODAL;
+                                 {
+                                 REPORT.RUNMODAL(REPORT::"Suggest Sales Price on Wksh.",TRUE,TRUE);
+                                 }
+                                 // </BGMILOVNAV-13>
+                               END;
+                                }
+      { 50001   ;2   ;Separator  }
+      { 50504   ;2   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=[ENU=Suggest Sales Price From Purch. Receipt;
+                                 SRL=Predlo§i prodajne cene za prijemnicu nabavke];
+                      Promoted=Yes;
+                      Image=SuggestSalesPrice;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 CreateSalesPriceFromRec@1000000000 : Report 50063;
+                               BEGIN
+                                 // <BGMILOVNAV-13>
+                                 CreateSalesPriceFromRec.SetWSFilter("Journal Template Name","Journal Batch Name");
+                                 CreateSalesPriceFromRec.RUNMODAL;
+                                 CurrPage.UPDATE(FALSE);
+                                 // </BGMILOVNAV-13>
+                               END;
+                                }
+      { 50003   ;2   ;Action    ;
+                      Name=SuggestSalesPriceFromPurchasePrice;
+                      Ellipsis=Yes;
+                      CaptionML=[ENU=Suggest Sales Price from Purchase Price;
+                                 SRL=Predlo§i prodajne cene od nabavnih cena];
+                      Promoted=Yes;
+                      Image=SuggestSalesPrice;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 SuggestSalesPrfromPuPr@1000000000 : Report 50004;
+                               BEGIN
+                                 // <AUTO8.00>
+                                 SuggestSalesPrfromPuPr.SetWSFilter("Journal Template Name","Journal Batch Name");
+                                 SuggestSalesPrfromPuPr.RUNMODAL;
+                                 CurrPage.UPDATE(FALSE);
+                                 REPORT.RUNMODAL(REPORT::"Suggest Sales Pr. from Pu. Pr.",TRUE,TRUE);
+                                 // </AUTO8.00>
+                               END;
+                                }
+      { 50002   ;2   ;Separator  }
+      { 36      ;2   ;Action    ;
+                      Ellipsis=Yes;
+                      CaptionML=ENU=I&mplement Price Change;
+                      Promoted=Yes;
+                      Image=ImplementPriceChange;
+                      PromotedCategory=Process;
+                      Scope=Repeater;
+                      OnAction=BEGIN
+                                 REPORT.RUNMODAL(REPORT::"Implement Price Change",TRUE,TRUE,Rec);
+                               END;
+                                }
+      { 11      ;2   ;Action    ;
+                      Name=ImplementPriceForMultipleCustomerPriceGroups;
+                      Ellipsis=Yes;
+                      CaptionML=[ENU=Implement Price For Multiple Customer Price Groups;
+                                 SRL=Primeni cene za viçe cenovnih grupa kupaca];
+                      Description=BGMILOVSUP-3;
+                      Promoted=Yes;
+                      PromotedIsBig=No;
+                      Image=ApplyEntries;
+                      PromotedCategory=Process;
+                      OnAction=VAR
+                                 ApplySalesPriceForCustPriceGr@1000 : Page 50108;
+                               BEGIN
+                                 // <BGMILOVSUP-3>
+                                 ApplySalesPriceForCustPriceGr.SetSalesPriceWorksheet(Rec);
+                                 ApplySalesPriceForCustPriceGr.RUNMODAL;
+                                 // </BGMILOVSUP-3>
+                               END;
+                                }
+    }
+  }
+  CONTROLS
+  {
+    { 1900000001;0;Container;
+                ContainerType=ContentArea }
+
+    { 50500;1  ;Field     ;
+                Lookup=Yes;
+                CaptionML=ENU=Batch Name;
+                SourceExpr=CurrentJnlBatchName;
+                OnValidate=VAR
+                             ItemJnlBatch@1000000000 : Record 233;
+                           BEGIN
+                             ItemJnlBatch.GET(GETRANGEMAX("Journal Template Name"),CurrentJnlBatchName);
+                             CurrentJnlBatchNameOnAfterVali;
+                           END;
+
+                OnLookup=BEGIN
+                           CurrPage.SAVERECORD;
+                           ItemJnlMgt.LookupNameSalesPrice(CurrentJnlBatchName,Rec);
+                           CurrPage.UPDATE(FALSE);
+                         END;
+                          }
+
+    { 1   ;1   ;Group     ;
+                GroupType=Repeater }
+
+    { 6   ;2   ;Field     ;
+                SourceExpr="Starting Date" }
+
+    { 14  ;2   ;Field     ;
+                SourceExpr="Ending Date" }
+
+    { 10  ;2   ;Field     ;
+                SourceExpr="Sales Type" }
+
+    { 4   ;2   ;Field     ;
+                SourceExpr="Sales Code" }
+
+    { 3   ;2   ;Field     ;
+                SourceExpr="Sales Description";
+                Visible=FALSE }
+
+    { 37  ;2   ;Field     ;
+                SourceExpr="Currency Code";
+                Visible=FALSE }
+
+    { 2   ;2   ;Field     ;
+                SourceExpr="Item No." }
+
+    { 5   ;2   ;Field     ;
+                SourceExpr="Item Description";
+                Visible=FALSE }
+
+    { 50006;2  ;Field     ;
+                Description=AUTO8.00;
+                SourceExpr="Vendor No." }
+
+    { 50010;2  ;Field     ;
+                SourceExpr="Location Code";
+                Visible=FALSE }
+
+    { 27  ;2   ;Field     ;
+                SourceExpr="Variant Code";
+                Visible=FALSE }
+
+    { 16  ;2   ;Field     ;
+                SourceExpr="Unit of Measure Code" }
+
+    { 12  ;2   ;Field     ;
+                SourceExpr="Minimum Quantity" }
+
+    { 1000000004;2;Field  ;
+                SourceExpr="Cost per Unit" }
+
+    { 1000000001;2;Field  ;
+                SourceExpr="Current Markup %" }
+
+    { 8   ;2   ;Field     ;
+                SourceExpr="Current Unit Price" }
+
+    { 7   ;2   ;Field     ;
+                SourceExpr="Retail VAT %" }
+
+    { 34  ;2   ;Field     ;
+                SourceExpr="New Unit Price" }
+
+    { 1000000000;2;Field  ;
+                SourceExpr="New Unit Price Excluding VAT" }
+
+    { 1000000003;2;Field  ;
+                SourceExpr="New Unit Price Including VAT" }
+
+    { 9   ;2   ;Field     ;
+                SourceExpr="Markup %" }
+
+    { 21  ;2   ;Field     ;
+                SourceExpr="Price Includes VAT";
+                Visible=FALSE }
+
+    { 50044;2  ;Field     ;
+                SourceExpr="Vendor Purchase Price" }
+
+    { 50045;2  ;Field     ;
+                SourceExpr="Current Price Difference Coef." }
+
+    { 50046;2  ;Field     ;
+                SourceExpr="New Price Difference Coef." }
+
+    { 1900000007;0;Container;
+                ContainerType=FactBoxArea }
+
+    { 1900383207;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=RecordLinks }
+
+    { 1905767507;1;Part   ;
+                Visible=FALSE;
+                PartType=System;
+                SystemPartID=Notes }
+
+  }
+  CODE
+  {
+    VAR
+      CurrentJnlBatchName@50501 : Code[10];
+      ItemJnlMgt@50502 : Codeunit 240;
+      CurrentJnlTemplateName@50503 : Code[10];
+
+    LOCAL PROCEDURE CurrentJnlBatchNameOnAfterVali@80503();
+    BEGIN
+      CurrPage.SAVERECORD;
+      ItemJnlMgt.SetNameSalesPrice(CurrentJnlBatchName,Rec);
+      CurrPage.UPDATE(FALSE);
+    END;
+
+    BEGIN
+    {
+      <NAVAE7.10>
+        <SP.946 range="13054241">Retail Modul</SP.946>
+      </NAVAE7.10>
+
+      <LS>
+        <LSW17.0>LS Retail W17.0</LSW17.0>
+      </LS>
+      <AUTO8.00>
+        <AUTO8.00 range="50000..61000">Auto Parts Solution</AUTO8.00>
+      </AUTO8.00>
+
+      <AM1.0>
+        <BGMILOVNAV-44 range="50044..50046">Price Difference Coefficient on Sales Price List and Worksheet</BGMILOVNAV-44>
+        <BGMILOVNAV-13 range="50502..50503|50500">Create Sales Price</BGMILOVNAV-13>
+        <BGMILOVNAV-105 range="50010">Sales Margin</BGMILOVNAV-105>
+      </AM1.0>
+    }
+    END.
+  }
+}
+
