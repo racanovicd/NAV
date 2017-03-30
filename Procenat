@@ -1,1 +1,3 @@
- tempPrice := ROUND( tempPrice  - ( tempPrice  * (varPopust/100)));
+
+tempPrice := ROUND( tempPrice  - ( tempPrice  * (varPopust/100)));
+varProcenatZT :=  ROUND(((varUkupnoNabavna/varFakVrijed) - 1) * 100);
