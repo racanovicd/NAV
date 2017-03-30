@@ -1,0 +1,1 @@
+ tempPrice := ROUND( tempPrice  - ( tempPrice  * (varPopust/100)));
