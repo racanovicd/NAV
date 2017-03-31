@@ -1,0 +1,11 @@
+
+//Pretvaranje 9499 u A-0009499
+      tempItemNo := ItemNo;
+        IF tempItemNo <> '' THEN BEGIN
+         IF STRLEN(tempItemNo) < 7 THEN
+             WHILE STRLEN (tempItemNo) < 7 DO
+                tempItemNo := '0' + FORMAT(ItemNo);
+       END;
+        tempItemNo := 'A-'+tempItemNo;
+        
+     
