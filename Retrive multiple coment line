@@ -1,0 +1,11 @@
+WITH Comment_Line DO BEGIN
+RESET;
+SETRANGE("No.", "Service Shipment Header"."Order No.");
+SETRANGE(Type,Type::"2");
+IF FINDSET THEN BEGIN
+i := 1;
+REPEAT
+  Fault[i] := Comment
+  i += 1;
+UNTIL (NEXT = 0) or (i >= ARRAYLEN(Fault));
+END;
