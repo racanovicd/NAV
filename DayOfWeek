@@ -1,6 +1,8 @@
 
-WeekDay - text
-DayOfWeek - Integer 
+  vraćanje rednog broja dana u sedmici i naziva dana
+  
+   WeekDay - text
+   DayOfWeek - Integer 
 
 
 
