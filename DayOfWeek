@@ -1,0 +1,10 @@
+
+WeekDay - text
+DayOfWeek - Integer 
+
+
+
+   WeekDay := FORMAT(WORKDATE,0,'<Weekday Text>');
+   DayOfWeek := DATE2DWY(WORKDATE, 1);
+   MESSAGE(WeekDay); (dan u sedmici)
+   MESSAGE(FORMAT(DayOfWeek)); (redni dan)
