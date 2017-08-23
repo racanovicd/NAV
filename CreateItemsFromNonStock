@@ -1,0 +1,9 @@
+LOCAL CreateItemsFromNonstock()
+rNI.RESET;
+d.OPEN('#1######## from #2########');
+IF rNI.FINDSET THEN REPEAT
+  cr+=1;
+  d.UPDATE(1, cr);
+  NonstockItemMgt.CreateItemFromNonstock(rNI);
+UNTIL (rNI.NEXT = 0) OR (cr > 100);
+d.CLOSE;
