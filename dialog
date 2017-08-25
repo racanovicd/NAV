@@ -1,0 +1,10 @@
+
+
+bDialog := DIALOG.CONFIRM(txtDialog, TRUE);
+IF bDialog = TRUE THEN BEGIN
+ END;
+ 
+ 
+ d.OPEN( '#1##########################################' );
+ d.UPDATE(1, Text001);
+ d.CLOSE;
