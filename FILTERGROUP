@@ -1,0 +1,4 @@
+
+FILTERGROUP(100);
+SETFILTER( Code , varFilter);
+FILTERGROUP(0);
