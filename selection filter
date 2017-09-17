@@ -1,0 +1,11 @@
+CurrForm.SETSELECTIONFILTER(Cust);
+Cust.MARKEDONLY(TRUE);
+IF Cust.FIND('-') THEN BEGIN
+    repeat
+      IF SelectionFilter <> '' THEN
+        SelectionFilter := SelectionFilter + '|';
+
+      SelectionFilter := SelectionFilter + Cust."No.";
+    until cust.next = 0;
+END;
+EXIT(SelectionFilter);
