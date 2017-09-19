@@ -8,3 +8,10 @@ IF bDialog = TRUE THEN BEGIN
  d.OPEN( '#1##########################################' );
  d.UPDATE(1, Text001);
  d.CLOSE;
+
+
+ukupno := COUNTAPPROX;
+window.OPEN('@1@@@@@@@@@@@@@@@@@@@@@');
+
+broj += 1;
+window.UPDATE(1, 100 * ROUND((broj*100)/ukupno, 1));
