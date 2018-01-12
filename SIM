@@ -1,0 +1,26 @@
+//rdamir - start
+// rcdTP.RESET;
+// rcdTP.SETRANGE("Store No.", Transaction."Store No.");
+// rcdTP.SETRANGE("POS Terminal No.", Transaction."POS Terminal No.");
+// rcdTP.SETRANGE("Transaction No.", Transaction."Transaction No.");
+// rcdTP.SETFILTER("Amount Tendered", '<>%1',0);
+// IF rcdTP.FINDFIRST THEN;
+// 
+// IF rcdTP."Tender Type" = '25' THEN BEGIN//cek
+//  varTempDoc := CONVERTSTR(DocNumber,'-',',');
+//  varStoreNo := SELECTSTR(1,varTempDoc);
+//  varPosNo := SELECTSTR(2,varTempDoc);
+//  EVALUATE(varTransNo, SELECTSTR(3,varTempDoc));
+//  rcdTH.RESET;
+//  rcdTH.SETRANGE("Store No.", varStoreNo);
+//  rcdTH.SETRANGE("POS Terminal No.", varPosNo);
+//  rcdTH.SETRANGE("Transaction No.", varTransNo);
+//  IF rcdTH.FINDFIRST  THEN BEGIN
+//    varOrigTransNo := rcdTH."Retrieved from Receipt No.";
+//    CLEAR(rcdTH2);
+//    rcdTH2.SETRANGE("Receipt No.", varOrigTransNo);
+//    IF rcdTH2.FINDFIRST THEN
+//     varApplyToDocNo := rcdTH2."Store No." +'-'+ rcdTH2."POS Terminal No." +'-'+ FORMAT(rcdTH2."Transaction No.");
+//   END;
+//   END;
+//rdamir - end
